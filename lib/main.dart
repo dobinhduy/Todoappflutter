@@ -44,11 +44,10 @@ class _MyAppState extends State<MyApp> {
 
   void checkLogin() async {
     String token = await authClass.getToken() as String;
-    if (token != null) {
-      setState(() {
-        currentPage = const HomePage();
-      });
-    }
+
+    setState(() {
+      currentPage = const HomePage();
+    });
   }
 
   @override

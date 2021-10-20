@@ -47,6 +47,7 @@ class _SignUpPageState extends State<SignInPage> {
                 10,
                 () {
                   authClass.googleSignIn(context);
+                  authClass.user();
                 },
               ),
               buttonItem("images/phone.png", "Continue with Phone", 10, () {
@@ -163,6 +164,7 @@ class _SignUpPageState extends State<SignInPage> {
           setState(() {
             circular = true;
           });
+
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (builder) => const HomePage()),

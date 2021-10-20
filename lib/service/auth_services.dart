@@ -14,6 +14,11 @@ class AuthClass {
   final storage = const FlutterSecureStorage();
   FirebaseAuth auth = FirebaseAuth.instance;
 
+  Future<void> user() async {
+    final user = auth.currentUser!;
+    print("user id: " + user.uid);
+  }
+
   Future<void> googleSignIn(BuildContext context) async {
     try {
       GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
