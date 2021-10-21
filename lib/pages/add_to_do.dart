@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:test/service/auth_services.dart';
 
 class AddToDoPage extends StatefulWidget {
   const AddToDoPage({Key? key}) : super(key: key);
@@ -10,6 +11,7 @@ class AddToDoPage extends StatefulWidget {
 }
 
 class _AddToDoPageState extends State<AddToDoPage> {
+  AuthClass auth = AuthClass();
   TextEditingController titleController = TextEditingController();
   TextEditingController desController = TextEditingController();
   String tasktype = "";
@@ -139,7 +141,9 @@ class _AddToDoPageState extends State<AddToDoPage> {
   Widget button() {
     return InkWell(
       onTap: () {
+        String uid = auth.user();
         FirebaseFirestore.instance.collection("ToDo").add({
+          "uid": uid,
           "title": titleController.text,
           "task": tasktype,
           "discription": desController.text,
@@ -150,7 +154,7 @@ class _AddToDoPageState extends State<AddToDoPage> {
       child: Container(
         height: 56,
         width: MediaQuery.of(context).size.width - 20,
-        margin: EdgeInsets.symmetric(horizontal: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           gradient: const LinearGradient(colors: [

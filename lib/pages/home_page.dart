@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:test/Custom/todo_card.dart';
 import 'package:test/pages/add_to_do.dart';
@@ -16,11 +17,15 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   AuthClass authClass = AuthClass();
 
-  final Stream<QuerySnapshot> _stream =
-      FirebaseFirestore.instance.collection("ToDo").snapshots();
+  late final Stream<QuerySnapshot> _stream;
 
   @override
   Widget build(BuildContext context) {
+    String userid = authClass.user();
+    _stream = FirebaseFirestore.instance
+        .collection("ToDo")
+        .where("uid", isEqualTo: userid)
+        .snapshots();
     return Scaffold(
       backgroundColor: Colors.black87,
       appBar: AppBar(
@@ -86,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                       Colors.purple,
                     ]),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.add,
                     size: 32,
                     color: Colors.white,
@@ -100,10 +105,11 @@ class _HomePageState extends State<HomePage> {
                   await authClass.logout();
                   Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (builder) => SignUpPage()),
+                      MaterialPageRoute(
+                          builder: (builder) => const SignUpPage()),
                       (route) => false);
                 },
-                child: Icon(
+                child: const Icon(
                   Icons.logout,
                   size: 32,
                   color: Colors.white,
@@ -116,7 +122,7 @@ class _HomePageState extends State<HomePage> {
           stream: _stream,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             }
             return ListView.builder(
                 itemCount: snapshot.data?.docs.length,
@@ -125,6 +131,7 @@ class _HomePageState extends State<HomePage> {
                   Color iconColor;
                   Map<String, dynamic> document =
                       snapshot.data?.docs[index].data() as Map<String, dynamic>;
+
                   switch (document["Category"]) {
                     case "Food":
                       iconData = Icons.run_circle_outlined;
@@ -157,9 +164,7 @@ class _HomePageState extends State<HomePage> {
                                   )));
                     },
                     child: TodoCard(
-                        title: document["title"] == null
-                            ? "No title"
-                            : document["title"],
+                        title: document["title"] ?? "No title",
                         iconColor: iconColor,
                         iconData: iconData,
                         time: "12 pm",
@@ -171,9 +176,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-   
-// IconButton(
-//               onPressed: () async {
-
-//               icon: Icon(Icons.logout)),

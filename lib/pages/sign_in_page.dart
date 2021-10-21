@@ -47,7 +47,6 @@ class _SignUpPageState extends State<SignInPage> {
                 10,
                 () {
                   authClass.googleSignIn(context);
-                  authClass.user();
                 },
               ),
               buttonItem("images/phone.png", "Continue with Phone", 10, () {
